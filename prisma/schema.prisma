@@ -1,0 +1,358 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String? // nom
+  firstname     String? // prénom
+  email         String? @unique
+  password      String? // mot de passe hashé
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  passwordResetTokens PasswordResetToken[]
+  reservations  Reservation[]
+  evennements_crees      Evennement[]           @relation("EvennementAuthor")
+  event_registrations    EventRegistration[]
+  evennement_favoris     EvennementFavoris[]
+  factures        Facture[]
+  invitations_envoyees CorrespondantChat[] @relation("InvitationsEnvoyees")
+  invitations_recues   CorrespondantChat[] @relation("InvitationsRecues")
+  conversations_user1  Conversation[] @relation("ConversationUser1")
+  conversations_user2  Conversation[] @relation("ConversationUser2")
+  messages_envoyes     Message[]
+  appels_passes        Appel[]
+  blogs               Blog[]
+  role                String   @default("user")
+  notifications       Notification[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+enum EspaceType {
+  SALLE_REUNION
+  OPEN_SPACE
+  BUREAU_PRIVE
+  ESPACE_COMMUN
+  ESPACE_EVENEMENTIEL
+  ESPACE_TOURNAGE
+}
+
+enum EspaceSousType {
+  BUREAU_CONFIANCE
+  BUREAU_DETERMINATION
+  BUREAU_SERENITE
+  BUREAU_EXCELLENCE
+  BUREAU_PROSPERITE
+}
+
+model Espace {
+  id            String   @id @default(uuid())
+  name          String
+  type          EspaceType
+  sous_type     EspaceSousType?
+  description   String?
+  capacite      Int      @default(1)
+  localisation  String?
+  image         String?
+  tarif_horaire   Float   @default(0.0)
+  tarif_journalier Float  @default(0.0)
+  tarif_semaine    Float  @default(0.0)
+  tarif_mensuel    Float  @default(0.0)
+  is_available     Boolean @default(true)
+  equipement_wifi           Boolean @default(true)
+  equipement_ecran          Boolean @default(false)
+  equipement_projecteur     Boolean @default(false)
+  equipement_tableau_blanc  Boolean @default(false)
+  equipement_imprimante     Boolean @default(true)
+  equipement_climatisation  Boolean @default(false)
+  equipement_casiers        Boolean @default(false)
+  equipement_cafe           Boolean @default(false)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  reservations  Reservation[]
+}
+
+enum ReservationType {
+  heure
+  journee
+  semaine
+  mois
+}
+
+enum ReservationStatut {
+  en_attente
+  confirmee
+  annulee
+}
+
+model Reservation {
+  id                String   @id @default(uuid())
+  user              User?    @relation(fields: [userId], references: [id])
+  userId            String?
+  espace            Espace   @relation(fields: [espaceId], references: [id])
+  espaceId          String
+  date_debut        DateTime
+  date_fin          DateTime?
+  heure_debut       String?
+  heure_fin         String?
+  reservation_type  ReservationType
+  nom_client        String
+  email_client      String
+  telephone_client  String?
+  entreprise_client String?
+  demande_speciale  String?
+  montant_total     Float    @default(0)
+  statut            ReservationStatut @default(en_attente)
+  is_archived       Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  factures          Facture[]
+}
+
+enum TypeEvenement {
+  Conference
+  Networking
+  Workshop
+  Social
+  Formation
+}
+
+model Evennement {
+  id                    String   @id @default(uuid())
+  title                 String
+  description           String
+  type_evenement        TypeEvenement
+  date                  DateTime
+  start_time            String?
+  end_time              String?
+  location              String
+  max_participants      Int
+  current_participants  Int      @default(0)
+  price                 Float    @default(0.0)
+  is_free               Boolean  @default(false)
+  author                User?    @relation("EvennementAuthor", fields: [authorId], references: [id])
+  authorId              String?
+  est_publie            Boolean  @default(false)
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  registrations         EventRegistration[]
+  favoris               EvennementFavoris[]
+  guest_registrations   GuestEventRegistration[]
+}
+
+model EventRegistration {
+  id                String      @id @default(uuid())
+  user              User        @relation(fields: [userId], references: [id])
+  userId            String
+  event             Evennement  @relation(fields: [eventId], references: [id])
+  eventId           String
+  is_favorite       Boolean     @default(false)
+  is_paid           Boolean     @default(false)
+  registration_date DateTime    @default(now())
+  facture           Facture?    @relation("EventRegistrationFacture", fields: [factureId], references: [id])
+  factureId         String? @unique
+}
+
+model EvennementFavoris {
+  id        String      @id @default(uuid())
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  event     Evennement  @relation(fields: [eventId], references: [id])
+  eventId   String
+  added_at  DateTime    @default(now())
+}
+
+model GuestEventRegistration {
+  id                String      @id @default(uuid())
+  event             Evennement  @relation(fields: [eventId], references: [id])
+  eventId           String
+  nom               String
+  prenom            String
+  telephone         String
+  adresse           String
+  registration_date DateTime    @default(now())
+  is_paid           Boolean     @default(false)
+}
+
+model Facture {
+  id          String   @id @default(uuid())
+  reference   String   @unique
+  created_at  DateTime @default(now())
+  montant     Float
+  statut      String   @default("En attente")
+  fichier     String?
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+  reservationId String?
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?
+  eventRegistration EventRegistration? @relation("EventRegistrationFacture")
+}
+
+// --- Module 5 : Correspondants ---
+enum CorrespondantStatut {
+  en_attente
+  accepte
+  refuse
+}
+
+model CorrespondantChat {
+  id              String              @id @default(uuid())
+  inviteur        User                @relation("InvitationsEnvoyees", fields: [inviteurId], references: [id])
+  inviteurId      String
+  invite          User                @relation("InvitationsRecues", fields: [inviteId], references: [id])
+  inviteId        String
+  statut          CorrespondantStatut
+  message         String?
+  date_invitation DateTime            @default(now())
+  date_reponse    DateTime?
+  @@unique([inviteurId, inviteId])
+}
+
+// --- Module 6 : Conversations & Messages ---
+model Conversation {
+  id             String   @id @default(uuid())
+  utilisateur_1  User     @relation("ConversationUser1", fields: [utilisateur1Id], references: [id])
+  utilisateur1Id String
+  utilisateur_2  User     @relation("ConversationUser2", fields: [utilisateur2Id], references: [id])
+  utilisateur2Id String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  messages       Message[]
+  appels         Appel[]
+  @@unique([utilisateur1Id, utilisateur2Id])
+}
+
+model Message {
+  id              String       @id @default(uuid())
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+  conversationId  String
+  expediteur      User         @relation(fields: [expediteurId], references: [id])
+  expediteurId    String
+  contenu         String
+  horodatage      DateTime     @default(now())
+  type            MessageType
+  fichier         String?
+}
+
+enum MessageType {
+  texte
+  appel_audio
+  appel_video
+}
+
+// --- Module 7 : Appels Audio/Vidéo ---
+enum AppelType {
+  audio
+  video
+}
+
+enum AppelEtat {
+  en_attente
+  accepte
+  refuse
+  termine
+  rate
+}
+
+model Appel {
+  id             String       @id @default(uuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  appelant       User         @relation(fields: [appelantId], references: [id])
+  appelantId     String
+  date_heure     DateTime     @default(now())
+  debut_appel    DateTime
+  fin_appel      DateTime?
+  duree          Int?
+  type_appel     AppelType
+  etat           AppelEtat
+}
+
+// --- Module 8 : Blogs ---
+enum BlogStatus {
+  brouillon
+  publie
+}
+
+model Blog {
+  id          String   @id @default(uuid())
+  title       String
+  categorie   String
+  extrait     String
+  contenu     String
+  tags        String?
+  a_la_une    Boolean  @default(false)
+  status      BlogStatus
+  image       String?
+  publier_le  DateTime
+  auteur      User     @relation(fields: [auteurId], references: [id])
+  auteurId    String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+// Notification
+model Notification {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  titre       String
+  message     String
+  date_envoie DateTime @default(now())
+}

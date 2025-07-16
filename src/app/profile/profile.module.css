@@ -1,0 +1,112 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a4508b 0%, #ff6a88 100%);
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(164, 80, 139, 0.15), 0 1.5px 6px rgba(255, 106, 136, 0.10);
+  padding: 40px 32px 32px 32px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.avatar {
+  height: 84px;
+  width: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6a88 0%, #a4508b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 auto 12px auto;
+  box-shadow: 0 2px 8px rgba(255, 106, 136, 0.10);
+}
+
+.title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  text-align: center;
+  color: #a4508b;
+  margin-bottom: 2px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #ff6a88;
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.05rem;
+}
+.label {
+  color: #a4508b;
+  font-weight: 600;
+}
+.value {
+  color: #333;
+  font-weight: 500;
+}
+
+.button {
+  width: 100%;
+  background: linear-gradient(90deg, #ff6a88 0%, #a4508b 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  margin-top: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(164, 80, 139, 0.10);
+  transition: background 0.2s, transform 0.15s;
+}
+.button:hover {
+  background: linear-gradient(90deg, #a4508b 0%, #ff6a88 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.link {
+  color: #ff6a88;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.link:hover {
+  color: #a4508b;
+}
+
+.message {
+  padding: 10px 0;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.error {
+  background: #ffeaea;
+  color: #e74c3c;
+} 

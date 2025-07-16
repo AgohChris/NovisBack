@@ -1,0 +1,95 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6a88 0%, #6a82fb 100%);
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(106, 130, 251, 0.15), 0 1.5px 6px rgba(255, 106, 136, 0.10);
+  padding: 40px 32px 32px 32px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  color: #6a82fb;
+  margin-bottom: 8px;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff6a88;
+  margin-bottom: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  transition: border 0.2s;
+  outline: none;
+}
+.input:focus {
+  border: 1.5px solid #6a82fb;
+  background: #f7faff;
+}
+
+.button {
+  width: 100%;
+  background: linear-gradient(90deg, #ff6a88 0%, #6a82fb 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  margin-top: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(106, 130, 251, 0.10);
+  transition: background 0.2s, transform 0.15s;
+}
+.button:hover {
+  background: linear-gradient(90deg, #6a82fb 0%, #ff6a88 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.link {
+  color: #ff6a88;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.link:hover {
+  color: #6a82fb;
+}
+
+.message {
+  padding: 10px 0;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.success {
+  background: #e6f9f0;
+  color: #1bbf7a;
+}
+.error {
+  background: #ffeaea;
+  color: #e74c3c;
+} 
