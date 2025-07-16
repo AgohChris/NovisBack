@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning={true} data-lt-installed={true}>
       <body id="root-app" className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-pink-100">
         <SessionWrapper>
           <header className="w-full shadow bg-white/80 backdrop-blur sticky top-0 z-10">
