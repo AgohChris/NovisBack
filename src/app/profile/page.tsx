@@ -39,12 +39,9 @@ function ReservationTable() {
   // Récupérer les réservations de l'utilisateur connecté
   useEffect(() => {
     const userId = (session?.user as { id?: string })?.id;
-    const token = (session as any)?.token;
     if (!userId) return;
     setLoading(true);
-    fetch(`/api/reservations/user/liste`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    fetch(`/api/reservations/user/liste`)
       .then(res => res.json())
       .then(data => {
         setReservations(data.reservations || []);
@@ -81,26 +78,27 @@ function ReservationTable() {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = (session as any)?.token;
-    await fetch('/api/reservations/user/create', {
+    const response = await fetch('/api/reservations/user/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
-    setModalOpen(false);
-    // Refresh reservations
-    setLoading(true);
-    fetch(`/api/reservations/user/liste`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => res.json())
-      .then(data => {
-        setReservations(data.reservations || []);
-        setLoading(false);
-      });
+    if (response.ok) {
+      setModalOpen(false);
+      // Refresh reservations
+      setLoading(true);
+      fetch(`/api/reservations/user/liste`)
+        .then(res => res.json())
+        .then(data => {
+          setReservations(data.reservations || []);
+          setLoading(false);
+        });
+    } else {
+      const error = await response.json();
+      alert(`Erreur: ${error.message}`);
+    }
   };
 
   return (
