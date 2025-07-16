@@ -38,8 +38,7 @@ function ReservationTable() {
 
   // Récupérer les réservations de l'utilisateur connecté
   useEffect(() => {
-    const userId = (session?.user as { id?: string })?.id;
-    if (!userId) return;
+    if (!session?.user?.id) return;
     setLoading(true);
     fetch(`/api/reservations/user/liste`, {
       credentials: 'include'
@@ -243,7 +242,7 @@ export default function ProfilePage() {
   }
 
   // Avatar avec initiales
-  const initials = ((session.user as any).firstname?.[0] || "") + ((session.user as any).name?.[0] || "");
+  const initials = (session.user.firstname?.[0] || "") + (session.user.name?.[0] || "");
 
   return (
     <div className={styles.container}>
@@ -256,22 +255,20 @@ export default function ProfilePage() {
         <div className={styles.info}>
           <div className={styles.infoRow}>
             <span className={styles.label}>Nom :</span>
-            <span className={styles.value}>{(session.user as any).name}</span>
+            <span className={styles.value}>{session.user.name || <span style={{ fontStyle: "italic", color: "#bbb" }}>Non renseigné</span>}</span>
           </div>
           <div className={styles.infoRow}>
             <span className={styles.label}>Prénom :</span>
-            <span className={styles.value}>{(session.user as any).firstname || <span style={{ fontStyle: "italic", color: "#bbb" }}>Non renseigné</span>}</span>
+            <span className={styles.value}>{session.user.firstname || <span style={{ fontStyle: "italic", color: "#bbb" }}>Non renseigné</span>}</span>
           </div>
           <div className={styles.infoRow}>
             <span className={styles.label}>Email :</span>
-            <span className={styles.value}>{(session.user as any).email}</span>
+            <span className={styles.value}>{session.user.email}</span>
           </div>
-          {(session.user as any).id && (
-            <div className={styles.infoRow}>
-              <span className={styles.label}>ID :</span>
-              <span className={styles.value}>{(session.user as any).id}</span>
-            </div>
-          )}
+          <div className={styles.infoRow}>
+            <span className={styles.label}>Rôle :</span>
+            <span className={styles.value}>{session.user.role || "user"}</span>
+          </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}

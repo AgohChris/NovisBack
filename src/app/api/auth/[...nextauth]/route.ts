@@ -6,8 +6,11 @@ import { compare } from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 
 type CustomUser = {
-  id?: string;
-  firstname?: string;
+  id: string;
+  email: string;
+  name: string;
+  firstname: string;
+  role: string;
 };
 
 const prisma = new PrismaClient();
@@ -50,18 +53,28 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login", // Personnalise la page de connexion si tu veux
   },
   callbacks: {
-    async session({ session, token, user }) {
-      if (session.user) {
-        (session.user as CustomUser).id = token.sub;
-        if (typeof token.firstname === 'string') {
-          (session.user as CustomUser).firstname = token.firstname;
-        }
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user = {
+          ...session.user,
+          id: token.id as string,
+          email: token.email as string,
+          name: token.name as string,
+          firstname: token.firstname as string,
+          role: token.role as string,
+        };
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        (token as Record<string, string | undefined>).firstname = (user as CustomUser).firstname;
+        // Lors de la première connexion, stocker toutes les infos utilisateur dans le token
+        const customUser = user as CustomUser;
+        token.id = customUser.id;
+        token.email = customUser.email;
+        token.name = customUser.name;
+        token.firstname = customUser.firstname;
+        token.role = customUser.role;
       }
       return token;
     },

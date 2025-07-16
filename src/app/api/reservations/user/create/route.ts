@@ -28,20 +28,17 @@ export async function POST(req: NextRequest) {
   try {
     // Authentification avec NextAuth
     const session = await getServerSession(authOptions);
-    if (!session || !session.user?.email) {
+    
+    if (!session || !session.user) {
       return NextResponse.json({ message: 'Non authentifié.' }, { status: 401 });
     }
     
-    // Récupérer l'utilisateur depuis la base de données
-    const user = await prisma.user.findUnique({ 
-      where: { email: session.user.email } 
-    });
+    const userId = session.user.id;
+    const user = session.user;
     
-    if (!user) {
-      return NextResponse.json({ message: 'Utilisateur non trouvé.' }, { status: 404 });
+    if (!userId) {
+      return NextResponse.json({ message: 'ID utilisateur manquant dans la session.' }, { status: 401 });
     }
-    
-    const userId = user.id;
     const body = await req.json();
     const parse = reservationSchema.safeParse(body);
     if (!parse.success) {
