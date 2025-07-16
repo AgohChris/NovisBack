@@ -41,7 +41,9 @@ function ReservationTable() {
     const userId = (session?.user as { id?: string })?.id;
     if (!userId) return;
     setLoading(true);
-    fetch(`/api/reservations/user/liste`)
+    fetch(`/api/reservations/user/liste`, {
+      credentials: 'include'
+    })
       .then(res => res.json())
       .then(data => {
         setReservations(data.reservations || []);
@@ -83,13 +85,16 @@ function ReservationTable() {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(form),
     });
     if (response.ok) {
       setModalOpen(false);
       // Refresh reservations
       setLoading(true);
-      fetch(`/api/reservations/user/liste`)
+      fetch(`/api/reservations/user/liste`, {
+        credentials: 'include'
+      })
         .then(res => res.json())
         .then(data => {
           setReservations(data.reservations || []);
