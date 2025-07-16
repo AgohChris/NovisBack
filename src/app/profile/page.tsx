@@ -104,69 +104,107 @@ function ReservationTable() {
   };
 
   return (
-    <div style={{ marginTop: 32 }}>
-      <h2>Mes réservations</h2>
-      <button onClick={() => setModalOpen(true)}>Nouvelle réservation</button>
-      <input
-        value={filter}
-        onChange={e => setFilter(e.target.value)}
-        placeholder="Filtrer..."
-        style={{ marginLeft: 16 }}
-      />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup: HeaderGroup<Reservation>) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header: Header<Reservation, unknown>) => (
-                <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr><td colSpan={columns.length}>Chargement...</td></tr>
-          ) : table.getRowModel().rows.length === 0 ? (
-            <tr><td colSpan={columns.length}>Aucune réservation</td></tr>
-          ) : (
-            table.getRowModel().rows.map((row: Row<Reservation>) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell: Cell<Reservation, unknown>) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+    <div className={styles.tableContainer}>
+      <div className={styles.tableHeader}>
+        <h2 className={styles.tableTitle}>Mes réservations</h2>
+        <div className={styles.tableActions}>
+          <button className={styles.addButton} onClick={() => setModalOpen(true)}>Nouvelle réservation</button>
+          <input
+            className={styles.filterInput}
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            placeholder="Filtrer..."
+          />
+        </div>
+      </div>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup: HeaderGroup<Reservation>) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header: Header<Reservation, unknown>) => (
+                  <th key={header.id}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
                 ))}
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-      <div style={{ marginTop: 8 }}>
-        <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+            ))}
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan={columns.length} className={styles.loadingRow}>Chargement...</td></tr>
+            ) : table.getRowModel().rows.length === 0 ? (
+              <tr><td colSpan={columns.length} className={styles.emptyRow}>Aucune réservation</td></tr>
+            ) : (
+              table.getRowModel().rows.map((row: Row<Reservation>) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell: Cell<Reservation, unknown>) => (
+                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className={styles.pagination}>
+        <button className={styles.paginationButton} onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           Précédent
         </button>
-        <span> Page {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} </span>
-        <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+        <span className={styles.paginationInfo}> Page {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} </span>
+        <button className={styles.paginationButton} onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
           Suivant
         </button>
       </div>
-      <Modal isOpen={modalOpen} onRequestClose={() => setModalOpen(false)}>
-        <h3>Nouvelle réservation</h3>
-        <form onSubmit={handleSubmit}>
-          <input name="espace_id" placeholder="ID de l'espace" value={form.espace_id} onChange={handleFormChange} required />
-          <select name="type_reservation" value={form.type_reservation} onChange={handleFormChange}>
-            <option value="heure">Heure</option>
-            <option value="journee">Journée</option>
-            <option value="semaine">Semaine</option>
-            <option value="mois">Mois</option>
-          </select>
-          <input name="date_debut" type="date" value={form.date_debut} onChange={handleFormChange} required />
-          <input name="date_fin" type="date" value={form.date_fin} onChange={handleFormChange} />
-          <input name="heure_debut" type="time" value={form.heure_debut} onChange={handleFormChange} />
-          <input name="heure_fin" type="time" value={form.heure_fin} onChange={handleFormChange} />
-          <input name="entreprise" placeholder="Entreprise" value={form.entreprise} onChange={handleFormChange} />
-          <input name="demande_speciale" placeholder="Demande spéciale" value={form.demande_speciale} onChange={handleFormChange} />
-          <button type="submit">Enregistrer</button>
+      <Modal 
+        isOpen={modalOpen} 
+        onRequestClose={() => setModalOpen(false)}
+        className={styles.modal}
+        overlayClassName={styles.modalOverlay}
+      >
+        <h3 className={styles.modalTitle}>Nouvelle réservation</h3>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>ID de l'espace</label>
+            <input className={styles.formInput} name="espace_id" placeholder="ID de l'espace" value={form.espace_id} onChange={handleFormChange} required />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Type de réservation</label>
+            <select className={styles.formSelect} name="type_reservation" value={form.type_reservation} onChange={handleFormChange}>
+              <option value="heure">Heure</option>
+              <option value="journee">Journée</option>
+              <option value="semaine">Semaine</option>
+              <option value="mois">Mois</option>
+            </select>
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Date de début</label>
+            <input className={styles.formInput} name="date_debut" type="date" value={form.date_debut} onChange={handleFormChange} required />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Date de fin</label>
+            <input className={styles.formInput} name="date_fin" type="date" value={form.date_fin} onChange={handleFormChange} />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Heure de début</label>
+            <input className={styles.formInput} name="heure_debut" type="time" value={form.heure_debut} onChange={handleFormChange} />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Heure de fin</label>
+            <input className={styles.formInput} name="heure_fin" type="time" value={form.heure_fin} onChange={handleFormChange} />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Entreprise</label>
+            <input className={styles.formInput} name="entreprise" placeholder="Entreprise" value={form.entreprise} onChange={handleFormChange} />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Demande spéciale</label>
+            <input className={styles.formInput} name="demande_speciale" placeholder="Demande spéciale" value={form.demande_speciale} onChange={handleFormChange} />
+          </div>
+          <div className={styles.formButtons}>
+            <button type="submit" className={styles.submitButton}>Enregistrer</button>
+            <button type="button" className={styles.cancelButton} onClick={() => setModalOpen(false)}>Annuler</button>
+          </div>
         </form>
       </Modal>
     </div>
@@ -176,9 +214,11 @@ function ReservationTable() {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
 
-  if (typeof window !== 'undefined') {
-    Modal.setAppElement('#__next');
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      Modal.setAppElement('#root-app');
+    }
+  }, []);
 
   if (status === "loading") {
     return <div className={styles.container}>Chargement...</div>;

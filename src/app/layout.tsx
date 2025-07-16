@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-pink-100">
+      <body id="root-app" className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-pink-100">
         <SessionWrapper>
           <header className="w-full shadow bg-white/80 backdrop-blur sticky top-0 z-10">
             <nav className="container mx-auto flex items-center justify-between py-4 px-4">
