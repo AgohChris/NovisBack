@@ -60,7 +60,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
     const data = parse.data;
     // Construction des dates si besoin
-    let updateData: any = { ...data };
+    let updateData: Record<string, unknown> = { ...data };
     if (data.date && data.start_time) {
       updateData.start_time = new Date(`${data.date}T${data.start_time}`);
     }

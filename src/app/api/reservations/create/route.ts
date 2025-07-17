@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Espace non disponible." }, { status: 400 });
     }
     // Calcul du montant total
-    let montant_total = 0;
     const dateDebut = new Date(data.date_debut);
     const dateFin = data.date_fin ? new Date(data.date_fin) : dateDebut;
     if (data.type_reservation === 'heure') {

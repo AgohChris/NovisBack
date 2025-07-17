@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (searchParams.has('type')) {
       where.type = searchParams.get('type');

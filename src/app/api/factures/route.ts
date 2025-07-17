@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -17,7 +18,7 @@ export async function GET(req: Request) {
   const to = searchParams.get('to');
   const statut = searchParams.get('statut');
   const utilisateur = searchParams.get('utilisateur');
-  const where: any = {};
+  const where: Prisma.FactureWhereInput = {};
   if (from || to) {
     where.created_at = {};
     if (from) where.created_at.gte = new Date(from);

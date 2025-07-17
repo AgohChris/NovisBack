@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const skip = (page - 1) * limit;
-  const where: any = {};
+  const where: Record<string, unknown> = {};
   if (categorie) where.categorie = categorie;
   if (status) where.status = status;
   if (a_la_une) where.a_la_une = a_la_une === 'true';

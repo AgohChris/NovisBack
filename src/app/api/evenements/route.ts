@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const apres = searchParams.get('apres');
     const is_free = searchParams.get('is_free');
     // Construction du filtre Prisma
-    let where: any = { est_publie: true };
+    const where: Record<string, unknown> = { est_publie: true };
     if (type) {
       where.type_evenement = type;
     }

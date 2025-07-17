@@ -61,7 +61,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
     const data = parse.data;
     // Recalcul du montant si dates/type changent
-    let montant_total = reservation.montant_total;
+    const montant_total = reservation.montant_total;
     const type_reservation = data.type_reservation || reservation.reservation_type;
     const dateDebut = data.date_debut ? new Date(data.date_debut) : reservation.date_debut;
     const dateFin = data.date_fin ? new Date(data.date_fin) : reservation.date_fin || reservation.date_debut;

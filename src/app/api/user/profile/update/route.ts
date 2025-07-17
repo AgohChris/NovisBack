@@ -27,7 +27,7 @@ export async function PUT(req: NextRequest) {
     const { first_name, last_name, email, old_password, new_password, confirm_new_password } = body;
 
     // Préparer les données à mettre à jour
-    const dataToUpdate: any = {};
+    const dataToUpdate: Record<string, unknown> = {};
     if (first_name) dataToUpdate.firstname = first_name;
     if (last_name) dataToUpdate.name = last_name;
     if (email) {
