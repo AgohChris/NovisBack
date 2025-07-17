@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Événement introuvable." }, { status: 404 });
     }
     // Vérifier qu'il reste des places
-    const countUser = await prisma.eventRegistration.count({ where: { evenementId: evenement_id } });
-    const countGuest = await prisma.guestEventRegistration.count({ where: { evenementId: evenement_id } });
+    const countUser = await prisma.eventRegistration.count({ where: { eventId: evenement_id } });
+    const countGuest = await prisma.guestEventRegistration.count({ where: { eventId: evenement_id } });
     const total = countUser + countGuest;
     if (total >= event.max_participants) {
       return NextResponse.json({ message: "Plus de places disponibles." }, { status: 400 });
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     // Vérifier que l'invité n'est pas déjà inscrit (même nom + téléphone)
     const alreadyRegistered = await prisma.guestEventRegistration.findFirst({
       where: {
-        evenementId: evenement_id,
+        eventId: evenement_id,
         nom,
         prenom,
         telephone,
@@ -50,14 +50,13 @@ export async function POST(req: NextRequest) {
     // Créer l'inscription invité
     const guestRegistration = await prisma.guestEventRegistration.create({
       data: {
-        evenementId: evenement_id,
+        eventId: evenement_id,
         nom,
         prenom,
         telephone,
         adresse,
-        paye: paye ?? (event.price > 0 ? false : true),
-        date_inscription: new Date(),
-        email: email || null,
+        is_paid: paye ?? (event.price > 0 ? false : true),
+        registration_date: new Date(),
       },
     });
 
@@ -100,6 +99,26 @@ export async function POST(req: NextRequest) {
         subject: `Confirmation d'inscription à l'événement : ${event.title}`,
         html,
       });
+    }
+    // Envoi d'un email à l'auteur de l'événement
+    if (event.authorId) {
+      const author = await prisma.user.findUnique({ where: { id: event.authorId } });
+      if (author && author.email) {
+        const { Resend } = await import('resend');
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const html = `
+          <h2>Nouvelle inscription invitée à votre événement</h2>
+          <p>Bonjour ${author.firstname || author.name || ''},</p>
+          <p>L'invité ${prenom} ${nom} vient de s'inscrire à votre événement <b>${event.title}</b>.</p>
+          <p>Date : ${new Date(event.date).toLocaleDateString('fr-FR')} à ${event.location}</p>
+        `;
+        await resend.emails.send({
+          from: "NovisCoworking <noreply@noviscoworking.com>",
+          to: author.email,
+          subject: `Nouvelle inscription invitée à votre événement : ${event.title}`,
+          html,
+        });
+      }
     }
     return NextResponse.json({ message: "Inscription invité réussie, facture générée et email envoyé.", guestRegistration, facture });
   } catch (error) {

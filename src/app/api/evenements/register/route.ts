@@ -115,6 +115,26 @@ export async function POST(req: NextRequest) {
         html,
       });
     }
+    // Envoi d'un email à l'auteur de l'événement
+    if (event.authorId) {
+      const author = await prisma.user.findUnique({ where: { id: event.authorId } });
+      if (author && author.email) {
+        const { Resend } = await import('resend');
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const html = `
+          <h2>Nouvelle inscription à votre événement</h2>
+          <p>Bonjour ${author.firstname || author.name || ''},</p>
+          <p>L'utilisateur ${user?.firstname || user?.name || ''} vient de s'inscrire à votre événement <b>${event.title}</b>.</p>
+          <p>Date : ${new Date(event.date).toLocaleDateString('fr-FR')} à ${event.location}</p>
+        `;
+        await resend.emails.send({
+          from: "NovisCoworking <noreply@noviscoworking.com>",
+          to: author.email,
+          subject: `Nouvelle inscription à votre événement : ${event.title}`,
+          html,
+        });
+      }
+    }
     return NextResponse.json({ message: "Inscription réussie, facture générée et email envoyé.", registration, facture });
   } catch (error) {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
