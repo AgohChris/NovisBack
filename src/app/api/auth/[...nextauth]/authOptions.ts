@@ -31,8 +31,9 @@ export const authOptions: NextAuthOptions = {
         if (!user || !user.password) throw new Error("Email ou mot de passe incorrect");
         const isValid = await compare(credentials!.password, user.password);
         if (!isValid) throw new Error("Email ou mot de passe incorrect");
+        if (!user.email) return null;
         const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
+        return { ...userWithoutPassword, email: user.email!, name: user.name || user.email!, firstname: user.firstname || '' };
       },
     }),
   ],
