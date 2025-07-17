@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { prisma } from '@/lib/prisma';
@@ -8,7 +8,7 @@ const reponseSchema = z.object({
   statut: z.enum(['accepte', 'refuse']),
 });
 
-export async function POST(req: Request, { params }: { params: { invitation_id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: { invitation_id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.email) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
