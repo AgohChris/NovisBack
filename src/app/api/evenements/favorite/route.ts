@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       },
     });
     return NextResponse.json({ message: "Événement ajouté aux favoris.", favori });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

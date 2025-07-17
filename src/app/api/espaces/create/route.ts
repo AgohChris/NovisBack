@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
     const espace = await prisma.espace.create({ data: parse.data });
     return NextResponse.json({ message: 'Espace créé avec succès', espace });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

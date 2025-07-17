@@ -53,10 +53,10 @@ export async function POST(req: NextRequest) {
     // Calcul du montant total
     let montant_total = 0;
     const dateDebut = new Date(data.date_debut);
-    let dateFin = data.date_fin ? new Date(data.date_fin) : dateDebut;
+    const dateFin = data.date_fin ? new Date(data.date_fin) : dateDebut;
     if (data.type_reservation === 'heure') {
-      let heureDebut = data.heure_debut ? new Date(`${data.date_debut}T${data.heure_debut}`) : dateDebut;
-      let heureFin = data.heure_fin ? new Date(`${data.date_debut}T${data.heure_fin}`) : dateFin;
+      const heureDebut = data.heure_debut ? new Date(`${data.date_debut}T${data.heure_debut}`) : dateDebut;
+      const heureFin = data.heure_fin ? new Date(`${data.date_debut}T${data.heure_fin}`) : dateFin;
       const nbHeures = getNbHeures(heureDebut, heureFin);
       montant_total = nbHeures * (espace.tarif_horaire || 0);
     } else if (data.type_reservation === 'journee') {

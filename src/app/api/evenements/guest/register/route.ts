@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
       }
     }
     return NextResponse.json({ message: "Inscription invité réussie, facture générée et email envoyé.", guestRegistration, facture });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     }
     await prisma.reservation.update({ where: { id }, data: { is_archived: true } });
     return NextResponse.json({ message: 'Réservation archivée.' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

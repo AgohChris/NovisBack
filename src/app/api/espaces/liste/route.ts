@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     const espaces = await prisma.espace.findMany({ where });
     return NextResponse.json({ espaces });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       },
     });
     return NextResponse.json({ message: "Événement créé avec succès", event });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

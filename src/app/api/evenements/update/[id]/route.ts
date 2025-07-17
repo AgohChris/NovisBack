@@ -48,7 +48,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: "Accès refusé. Seul le créateur ou un admin peut modifier." }, { status: 403 });
     }
     // Restriction si déjà publié ou inscrits
-    const inscrits = await prisma.eventRegistration.count({ where: { evenementId: params.id } });
+    const inscrits = await prisma.eventRegistration.count({ where: { eventId: params.id } });
     if (event.est_publie || inscrits > 0) {
       return NextResponse.json({ message: "Impossible de modifier un événement déjà publié ou avec des inscrits." }, { status: 400 });
     }
@@ -60,7 +60,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
     const data = parse.data;
     // Construction des dates si besoin
-    let updateData: Record<string, unknown> = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.date && data.start_time) {
       updateData.start_time = new Date(`${data.date}T${data.start_time}`);
     }

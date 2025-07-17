@@ -167,7 +167,7 @@ function ReservationTable() {
         <h3 className={styles.modalTitle}>Nouvelle réservation</h3>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>ID de l'espace</label>
+            <label className={styles.formLabel}>ID de espace</label>
             <input className={styles.formInput} name="espace_id" placeholder="ID de l'espace" value={form.espace_id} onChange={handleFormChange} required />
           </div>
           <div className={styles.formGroup}>

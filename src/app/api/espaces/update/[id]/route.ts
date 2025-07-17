@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       data: parse.data,
     });
     return NextResponse.json({ message: 'Espace modifié avec succès', espace });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur ou espace introuvable.' }, { status: 500 });
   }
 } 

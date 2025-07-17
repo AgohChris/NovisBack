@@ -8,7 +8,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     const { id } = params;
     await prisma.espace.delete({ where: { id } });
     return NextResponse.json({ message: 'Espace supprimé avec succès.' });
-  } catch (error) {
-    return NextResponse.json({ message: 'Erreur serveur ou espace introuvable.' }, { status: 500 });
+  } catch {
+    return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

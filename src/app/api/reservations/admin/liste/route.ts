@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       orderBy: { created_at: 'desc' }
     });
     return NextResponse.json({ reservations });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

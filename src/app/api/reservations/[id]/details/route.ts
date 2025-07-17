@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Accès refusé.' }, { status: 403 });
     }
     return NextResponse.json({ reservation });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       orderBy: { date_inscription: 'desc' },
     });
     return NextResponse.json({ inscriptions });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

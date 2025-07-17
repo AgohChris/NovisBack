@@ -34,7 +34,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       data: { est_publie: false },
     });
     return NextResponse.json({ message: "Événement supprimé (soft delete).", event: deleted });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

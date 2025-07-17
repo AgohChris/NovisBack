@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
+import type { RouteContext } from 'next';
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, context: RouteContext<{ id: string }>) {
+  const { id } = context.params;
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.email) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -13,15 +15,14 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 401 });
   }
   const userId = user.id;
-  const conversationId = params.id;
   // Vérifie que l'utilisateur est bien participant
-  const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } });
+  const conversation = await prisma.conversation.findUnique({ where: { id: id } });
   if (!conversation || (conversation.utilisateur1Id !== userId && conversation.utilisateur2Id !== userId)) {
     return NextResponse.json({ error: 'Accès interdit à cette conversation.' }, { status: 403 });
   }
   // Récupère l'historique des appels
   const appels = await prisma.appel.findMany({
-    where: { conversationId },
+    where: { conversationId: id },
     orderBy: { debut: 'desc' },
     select: {
       id: true,

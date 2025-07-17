@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Espace non trouvé.' }, { status: 404 });
     }
     return NextResponse.json({ espace });
-  } catch (error) {
-    return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
+  } catch {
+    return NextResponse.json({ message: 'Erreur serveur ou espace introuvable.' }, { status: 500 });
   }
 } 

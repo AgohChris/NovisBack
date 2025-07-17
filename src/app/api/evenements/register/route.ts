@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       }
     }
     return NextResponse.json({ message: "Inscription réussie, facture générée et email envoyé.", registration, facture });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

@@ -33,8 +33,8 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error || "Erreur inconnue");
       setSuccess("Inscription réussie ! Vérifie ta boîte mail.");
       setForm({ name: "", firstname: "", email: "", password: "", confirmPassword: "" });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

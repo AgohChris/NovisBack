@@ -39,7 +39,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       data: { est_publie: !event.est_publie },
     });
     return NextResponse.json({ message: `Événement ${updated.est_publie ? 'publié' : 'dépublié'}.`, event: updated });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 

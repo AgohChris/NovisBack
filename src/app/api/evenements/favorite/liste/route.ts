@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       orderBy: { date_ajout: 'desc' },
     });
     return NextResponse.json({ favoris });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Erreur serveur.' }, { status: 500 });
   }
 } 
