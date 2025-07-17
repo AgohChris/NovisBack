@@ -3,8 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.email) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -22,16 +22,16 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   // Récupère l'historique des appels
   const appels = await prisma.appel.findMany({
     where: { conversationId: id },
-    orderBy: { debut: 'desc' },
+    orderBy: { debut_appel: 'desc' },
     select: {
       id: true,
       appelantId: true,
-      debut: true,
-      fin: true,
+      debut_appel: true,
+      fin_appel: true,
       duree: true,
-      type: true,
+      type_appel: true,
       etat: true,
-      cree_le: true,
+      // cree_le: true, // à retirer si ce champ n'existe pas
     },
   });
   return NextResponse.json({ appels }, { status: 200 });
